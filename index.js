@@ -96,8 +96,8 @@ router
   .post(express.urlencoded({extended: false}), function(req,res,next) {
 
     // Declarations
+    const rawBody = await getRawBody(req)
     const hmac    = req.get('X-Shopify-Hmac-Sha256')
-    const rawBody = getRawBody(req)
     const hash    = crypto.createHmac('sha256', secretKey).update(rawBody, 'utf8', 'hex').digest('base64')
 
     // Compare our hash to Shopify's hash
