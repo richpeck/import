@@ -121,7 +121,6 @@ router
       "email":          order.email,
       "name":           order.name,
       "phone":          order.phone || "000",
-      "address":        order.default_address,
       "username":       order.email,
       "first_name":     order.first_name,
       "last_name":      order.last_name,
