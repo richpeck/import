@@ -104,11 +104,16 @@ router
     // Compare our hash to Shopify's hash
     if (hash === hmac) {
       console.log('🎉 New Order!')
-      res.sendStatus(200)
     } else {
       console.log('Not from Shopify!')
       res.sendStatus(403)
     }
+
+    // Build dataset
+    const order = JSON.parse(body.toString())
+    console.log(order)
+
+    res.sendStatus(200)
 
 });
 
