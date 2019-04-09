@@ -29,6 +29,10 @@ const getRawBody  = require('raw-body')
 const crypto      = require('crypto')
 const secretKey   = process.env.SHOPIFY_KEY
 
+// Tookan API
+const request = require('request')
+const tookan  = process.env.TOOKAN_KEY
+
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 //             _____                                         //
@@ -111,8 +115,11 @@ router
 
     // Build dataset
     const order = JSON.parse(rawBody.toString())
-    console.log(order)
+    console.log(order.email)
 
+
+
+    // All completed successfully
     res.sendStatus(200)
 
 });
