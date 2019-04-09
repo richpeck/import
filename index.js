@@ -95,29 +95,14 @@ router
   .route('/')
   .post(express.urlencoded({extended: false}), function(req,res,next) {
 
-    // Check for Order
-    console.log('🎉 We got an order!')
-
-    // We'll compare the hmac to our own hash
-    const hmac = req.get('X-Shopify-Hmac-Sha256')
-
-    // Use raw-body to get the body (buffer)
-    try {
-      const rawBody = getRawBody(req)
-    } catch (e) {
-      console.log('Something went wrong:')
-      console.log(e)
-    }
-
-    // Create a hash using the body and our key
-    const hash = crypto
-      .createHmac('sha256', secretKey)
-      .update(rawBody, 'utf8', 'hex')
-      .digest('base64')
+    // Declarations
+    const hmac    = req.get('X-Shopify-Hmac-Sha256')
+    const rawBody = getRawBody(req)
+    const hash    = crypto.createHmac('sha256', secretKey).update(rawBody, 'utf8', 'hex').digest('base64')
 
     // Compare our hash to Shopify's hash
     if (hash === hmac) {
-      console.log('It came from Shopify!')
+      console.log('🎉 New Order!')
       res.sendStatus(200)
     } else {
       console.log('Not from Shopify!')
