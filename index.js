@@ -119,7 +119,7 @@ router
       "api_key":        tookan,
       "user_type":      0,
       "email":          order.email,
-      "name":           order.name,
+      "name":           order.name || "Test",
       "phone":          order.phone || "000",
       "address":        order.default_address,
       "username":       order.email,
