@@ -1,0 +1,29 @@
+{
+  "name": "node-g6k",
+  "version": "0.2.0",
+  "description": "Handles inbound order requests and passes them through to Shopify",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "shopify-api-node": "^2.17.0"
+  },
+  "engines": {
+    "node": "4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/richpeck/node-g6k"
+  },
+  "keywords": [
+    "node",
+    "g6k"
+  ],
+  "author": "Mark Pundsack",
+  "contributors": [
+    "Zeke Sikelianos <zeke@sikelianos.com> (http://zeke.sikelianos.com)"
+  ],
+  "license": "MIT"
+}
