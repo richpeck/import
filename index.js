@@ -87,6 +87,13 @@ app.listen(app.get('port'), function() {
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
+// rawBody
+// Requires async
+async function rawBody() {
+  let x = await getRawBody(req);
+  return x;
+}
+
 // INBOUND
 // https://import-customers.herokuapp.com (POST)
 // This has to be JSON/XHR only && accept the data from Shopify
@@ -94,13 +101,6 @@ app.listen(app.get('port'), function() {
 router
   .route('/')
   .post(express.urlencoded({extended: false}), function(req,res,next) {
-
-    // rawBody
-    // Requires async
-    async function rawBody() {
-      let x = await getRawBody(req);
-      return x;
-    }
 
     // Declarations
     const hmac    = req.get('X-Shopify-Hmac-Sha256')
