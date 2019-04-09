@@ -103,15 +103,23 @@ router
   .post(express.urlencoded({extended: false}), function(req,res,next) {
 
     // Declarations
+    const rawBody = rawBody(req)
     const hmac    = req.get('X-Shopify-Hmac-Sha256')
     try {
-      const hash    = crypto.createHmac('sha256', secretKey).update(rawBody(req), 'utf8', 'hex').digest('base64')
+      const hash    = crypto.createHmac('sha256', secretKey).update(, 'utf8', 'hex').digest('base64')
     } catch (e) {
       console.log(e)
       res.sendStatus(500)
     }
 
-res.sendStatus(200)
+    // Compare our hash to Shopify's hash
+    if (hash === hmac) {
+      console.log('🎉 New Order!')
+      res.sendStatus(200)
+    } else {
+      console.log('Not from Shopify!')
+      res.sendStatus(403)
+    }
 
 });
 
