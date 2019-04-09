@@ -118,7 +118,6 @@ router
     let tookan_body = {
       "api_key":        tookan,
       "email":          order.email,
-      "phone":          order.phone,
       "username":       order.email,
       "first_name":     order.first_name,
       "last_name":      order.last_name
