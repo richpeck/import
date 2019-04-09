@@ -1,17 +1,17 @@
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-//  _____            __ _     _____         _                //
-// |  _  \          / _| |   |  _  |       | |               //
-// | | | |_ __ __ _| |_| |_  | | | |_ __ __| | ___ _ __ ___  //
-// | | | | '__/ _` |  _| __| | | | | '__/ _` |/ _ \ '__/ __| //
-// | |/ /| | | (_| | | | |_  \ \_/ / | | (_| |  __/ |  \__ \ //
-// |___/ |_|  \__,_|_|  \__|  \___/|_|  \__,_|\___|_|  |___/ //
-//                                                           //
+//            _____                           _              //
+//           |_   _|                         | |             //
+//             | | _ __ ___  _ __   ___  _ __| |_            //
+//             | || '_ ` _ \| '_ \ / _ \| '__| __|           //
+//            _| || | | | | | |_) | (_) | |  | |_            //
+//            \___/_| |_| |_| .__/ \___/|_|   \__|           //
+//                          | |                              //
+//                          |_|                              //
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
-// This takes requests to https://g6k.carte-grise-pref.fr/order and sends the data to Shopify's API
-// The returned data should then provide us with the ability to build a "checkout" object
-// The checkout object gives us the ability to obtain a "web url" for the order, which we're able to direct the buyer to
+// This takes requests to https://import-customers.herokuapp.com and sends the data to TookanApp's API
+// We don't need to send any response as the Shopify data is imported via a webhook
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
@@ -22,28 +22,12 @@ const express = require('express')
 const app     = express()
 const router  = express.Router()
 
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
-//          _____ _                 _  __                    //
-//         /  ___| |               (_)/ _|                   //
-//         \ `--.| |__   ___  _ __  _| |_ _   _              //
-//          `--. \ '_ \ / _ \| '_ \| |  _| | | |             //
-//         /\__/ / | | | (_) | |_) | | | | |_| |             //
-//         \____/|_| |_|\___/| .__/|_|_|  \__, |             //
-//                           | |           __/ |             //
-//                           |_|          |____/             //
-//                                                           //
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
-
-// Shopify
-// https://www.npmjs.com/package/shopify-api-node
-const Shopify = require('shopify-api-node');
-const shopify = new Shopify({
-  shopName: process.env.SHOPIFY_NAME,
-  apiKey:   process.env.SHOPIFY_API,
-  password: process.env.SHOPIFY_PASS
-});
+// Processing
+// Allows us to process inboud requests from the likes of Shopify etc
+// https://medium.com/@scottdixon/verifying-shopify-webhooks-with-nodejs-express-ac7845c9e40a
+const getRawBody  = require('raw-body')
+const crypto      = require('crypto')
+const secretKey   = process.env.SHOPIFY_KEY
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -65,7 +49,7 @@ app.use(express.static(__dirname + '/public')) // Assets
 // Base URL
 // This is meant to provide users with the ability to access the app on /order
 // It allows us to use relative URL's without having to make a big deal about accepting inbound requests etc
-app.use('/order', router);
+app.use('', router);
 
 // BodyParser
 // Allows us to view/manage data passed through the body tag of the request
@@ -103,120 +87,39 @@ app.listen(app.get('port'), function() {
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
-// Properties Function
-// Would rather this be inline but apparently Node can't do that
-function properties(params,callback,tax){
-
-  // Properties Array
-  let properties = [];
-
-  // Regex Test
-  let regex = function(t){
-    return /^[Y]/.test(t);
-  };
-
-  // Cycle through params
-  // Only need "properties"
-  Object.keys(params)
-    .filter((name) => /properties/.test(name)) // only properties
-    .filter((name) => (params[name] !== "")) // remove empty values
-    .forEach(function(property) { // cycle
-
-    // Rebuild the key to get rid of the properties[] element
-    // This allows us to only show what we want the user to see
-    // https://stackoverflow.com/a/17779833/1143732
-    let name = property.match(/\[.*?\]/g).toString().replace(/[\[\]']/g,'');
-    let prop = params[property].toString(); // Manipulate vars here - allows us to change them later
-
-    // Do something to determine whether property should be pursued or not
-    // For now, we'll just handle true/false for whether the "tax" should be shown, or whether it should be the other stuff
-    // Obviously, this should change to a regex-based system...
-    if ((tax) && (!regex(name))) {
-      return; // Skips if "tax" var is present and the property does not have y in the beginning
-    } else if ((!tax) && (regex(name))) {
-      return; // Skips if tax is not present and it has "y" in the beginning
-    }
-
-    // Append the new values to the "properties" variable
-    properties.push({ "name": name, "value": prop });
-
-  });
-
-  // Send data back
-  return callback(properties);
-}
-
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
-
 // INBOUND
-// https://g6k.carte-grise-pref.fr/order (POST)
-// This has to be JSON/XHR only && accept the data from the submitted form
+// https://import-customers.herokuapp.com (POST)
+// This has to be JSON/XHR only && accept the data from Shopify
 // This will take the data, send it to Shopify and then build a "checkout" response
 router
   .route('/')
   .post(express.urlencoded({extended: false}), function(request, response, next) {
 
-    // This receives a payload from the user
-    // Our job is to turn this payload into a draft order
-    // If the draft order has been created, the next step is to create a Checkout object via the Checkout API
-    // The checkout API is described here: https://help.shopify.com/en/api/guides/sales-channel-sdk/getting-started#completing-a-payment-using-web-url
-    // param - https://stackoverflow.com/a/49943829/1143732
-    let params = request.body;
+    // Check for Order
+    console.log('🎉 We got an order!')
 
-    // POST vars
-    // Send the above data through to Shopify and parse the response
-    // The draftOrder API is as follows: https://help.shopify.com/en/api/reference/orders/draftorder
-    // POST /admin/draft_orders.json
-    // {
-    //   "draft_order": {
-    //     "line_items": [
-    //       {
-    //         "title": "Taxe De Payer",
-    //         "price": "20.00",
-    //         "quantity": 2
-    //       }
-    //     ]
-    //   }
-    // }
+    // We'll compare the hmac to our own hash
+    const hmac = req.get('X-Shopify-Hmac-Sha256')
 
-    // Create draftOrder
-    // If successful, should create an order on the platform and respond with invoice_url
-    shopify.draftOrder.create({
-      "line_items": [
-        {
+    // Use raw-body to get the body (buffer)
+    const body = await getRawBody(req)
 
-          // Standard Options
-          // This allows us to select the base variants for the product
-          "variant_id": params.id,
-          "quantity":   params.quantity,
+    // Create a hash using the body and our key
+    const hash = crypto
+      .createHmac('sha256', secretKey)
+      .update(body, 'utf8', 'hex')
+      .digest('base64')
 
-          // Properties
-          // Needs to cycle through params and assign them
-          // We need to include things such as the simulator specific credits etc
-          "properties": properties(params, (data) => { return data; })
-
-        },
-        {
-
-          // Custom line item
-          // Allows us to determine price the user pays
-          "title":      "Taxes",
-          "price":      params["properties[Y6 - Taxes à payer]"],
-          "taxable":    false,
-          "quantity":   1,
-          "properties": properties(params, (data) => { return data; }, true)
-
-        }
-      ]
-    })
-    .then(function(draftOrder){ response.send(draftOrder); })
-    .catch(next); // http://expressjs.com/en/guide/error-handling.html
-
-    // This does not need the checkout API any more
-    // All we need to do is send the draft order to the platform and then accept the returned values
-    // We need to make the front-end look prettier, but that has nothing to do with this script
-    // The main things we need is some exception handling (for Shopify Auth + draftOrder management), and the ability to clarify what's been sent
+    // Compare our hash to Shopify's hash
+    if (hash === hmac) {
+      // It's a match! All good
+      console.log('Phew, it came from Shopify!')
+      res.sendStatus(200)
+    } else {
+      // No match! This request didn't originate from Shopify
+      console.log('Danger! Not from Shopify!')
+      res.sendStatus(403)
+    }
 
 });
 
