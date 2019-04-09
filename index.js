@@ -117,13 +117,16 @@ router
     const order = JSON.parse(rawBody.toString())
     let tookan_body = {
       "api_key":        tookan,
+      "user_type":      0,
       "email":          order.email,
+      "name":           order.name
       "phone":          order.phone || "000",
+      "address":        order.default_address,
       "username":       order.email,
       "first_name":     order.first_name,
       "last_name":      order.last_name,
-      "team_id":        process.env.TOOKAN_TEAM|| "Default Team",
-      "timezone":       "-330"
+      "team_id":        process.env.TOOKAN_TEAM || "Default Team",
+      "timezone":       process.env.TOOKAN_TIMESTAMP "-330"
     }
 
      console.log(JSON.stringify(tookan_body))
