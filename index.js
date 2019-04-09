@@ -110,7 +110,7 @@ router
     }
 
     // Build dataset
-    const order = JSON.parse(body.toString())
+    const order = JSON.parse(rawBody.toString())
     console.log(order)
 
     res.sendStatus(200)
