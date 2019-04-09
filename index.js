@@ -103,7 +103,7 @@ router
 
     // Use raw-body to get the body (buffer)
     try {
-      const rawBody = await getRawBody(req)
+      const rawBody = getRawBody(req)
     } catch (e) {
       console.log('Something went wrong:')
       console.log(e)
