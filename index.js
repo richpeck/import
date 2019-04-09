@@ -104,7 +104,7 @@ router
 
     // Declarations
     const hmac    = req.get('X-Shopify-Hmac-Sha256')
-
+res.sendStatus(200)
 
 });
 
