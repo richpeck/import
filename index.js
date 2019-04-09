@@ -104,6 +104,8 @@ router
 
     // Declarations
     const hmac    = req.get('X-Shopify-Hmac-Sha256')
+    const hash    = crypto.createHmac('sha256', secretKey).update(rawBody(req), 'utf8', 'hex').digest('base64')
+
 res.sendStatus(200)
 
 });
