@@ -118,9 +118,11 @@ router
     let tookan_body = {
       "api_key":        tookan,
       "email":          order.email,
+      "phone":          order.phone || "000",
       "username":       order.email,
       "first_name":     order.first_name,
-      "last_name":      order.last_name
+      "last_name":      order.last_name,
+      "team_id":        process.env.TOOKAN_TEAM|| "Default Team"
     }
 
      console.log(JSON.stringify(tookan_body))
