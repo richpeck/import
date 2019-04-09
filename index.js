@@ -115,16 +115,27 @@ router
 
     // Build dataset
     const order = JSON.parse(rawBody.toString())
-    console.log(order.email)
+    let tookan_body = {
+      "api_key":        tookan,
+      "email":          order.email,
+      "phone":          order.phone,
+      "transport_type": "1",
+      "transport_desc": "auto",
+      "license":        "demo",
+      "color":          "blue",
+      "timezone":       "-330",
+      "team_id":        "Your Team ID",
+      "username":       order.email,
+      "first_name":     order.first_name,
+      "last_name":      order.last_name,
+      "rule_id":        "123"
+    }
 
     request({
       method: 'POST',
       url: 'https://api.tookanapp.com/v2/add_agent',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: "{  \"api_key\": \"${ tookan }\",  \"email\": \"${ order.email }\",  \"phone\": \"${ order.phone }\",  \"transport_type\": \"1\",  \"transport_desc\": \"auto\",  \"license\": \"demo\",  \"color\": \"blue\",  \"timezone\": \"-330\",  \"team_id\": \"Your Team ID\",  \"username\": \"username\",  \"first_name\": \"${ order.first_name }\",  \"last_name\": \"${ order.last_name }\",  \"rule_id\": 123}"
-    }, function (error, response, body) {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tookan_body)
       console.log('Status:', response.statusCode);
       console.log('Headers:', JSON.stringify(response.headers));
       console.log('Response:', body);
