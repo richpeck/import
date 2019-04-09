@@ -95,10 +95,16 @@ router
   .route('/')
   .post(express.urlencoded({extended: false}), function(req,res,next) {
 
+    // rawBody
+    // Requires async
+    async function rawBody() {
+      let x = await getRawBody(req);
+      return x;
+    }
+
     // Declarations
-    const rawBody = await getRawBody(req)
     const hmac    = req.get('X-Shopify-Hmac-Sha256')
-    const hash    = crypto.createHmac('sha256', secretKey).update(rawBody, 'utf8', 'hex').digest('base64')
+    const hash    = crypto.createHmac('sha256', secretKey).update(rawBody(), 'utf8', 'hex').digest('base64')
 
     // Compare our hash to Shopify's hash
     if (hash === hmac) {
