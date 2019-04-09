@@ -131,6 +131,8 @@ router
       "rule_id":        "123"
     }
 
+     console.log(JSON.stringify(tookan_body))
+
     request({
       method: 'POST',
       url: 'https://api.tookanapp.com/v2/add_agent',
