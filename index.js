@@ -123,10 +123,6 @@ router
       "first_name":     order.first_name,
       "last_name":      order.last_name,
       "team_id":        process.env.TOOKAN_TEAM|| "Default Team",
-      "transport_type": "1",
-      "transport_desc": "auto",
-      "license":        "demo",
-      "color":          "blue",
       "timezone":       "-330"
     }
 
