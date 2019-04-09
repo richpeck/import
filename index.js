@@ -100,7 +100,7 @@ router
     const rawBody = await getRawBody(req)
     const hmac    = req.get('X-Shopify-Hmac-Sha256')
     try {
-      const hash    = crypto.createHmac('sha256', secretKey).update(, 'utf8', 'hex').digest('base64')
+      const hash    = crypto.createHmac('sha256', secretKey).update(rawBody, 'utf8', 'hex').digest('base64')
     } catch (e) {
       console.log(e)
       res.sendStatus(500)
