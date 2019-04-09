@@ -103,26 +103,23 @@ router
 
     // Use raw-body to get the body (buffer)
     try {
-      const body = await getRawBody(req)
+      const rawBody = await getRawBody(req)
     } catch (e) {
       console.log('Something went wrong:')
       console.log(e)
     }
 
-
     // Create a hash using the body and our key
     const hash = crypto
       .createHmac('sha256', secretKey)
-      .update(body, 'utf8', 'hex')
+      .update(rawBody, 'utf8', 'hex')
       .digest('base64')
 
     // Compare our hash to Shopify's hash
     if (hash === hmac) {
-      // It's a match! All good
       console.log('It came from Shopify!')
       res.sendStatus(200)
     } else {
-      // No match! This request didn't originate from Shopify
       console.log('Not from Shopify!')
       res.sendStatus(403)
     }
