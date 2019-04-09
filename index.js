@@ -136,6 +136,7 @@ router
       url: 'https://api.tookanapp.com/v2/add_agent',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(tookan_body)
+    }, function (error, response, body) {
       console.log('Status:', response.statusCode);
       console.log('Headers:', JSON.stringify(response.headers));
       console.log('Response:', body);
