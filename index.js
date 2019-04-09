@@ -133,7 +133,7 @@ router
 
     request({
       method: 'POST',
-      url: 'https://api.tookanapp.com/v2/add_agent',
+      url: 'https://api.tookanapp.com/v2/customer/add',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(tookan_body)
     }, function (error, response, body) {
