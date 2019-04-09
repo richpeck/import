@@ -1,7 +1,7 @@
 {
-  "name": "node-g6k",
+  "name": "import-customers",
   "version": "0.2.0",
-  "description": "Handles inbound order requests and passes them through to Shopify",
+  "description": "Allows us to transfer data between Shopify and TookanApp",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

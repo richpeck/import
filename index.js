@@ -93,7 +93,7 @@ app.listen(app.get('port'), function() {
 // This will take the data, send it to Shopify and then build a "checkout" response
 router
   .route('/')
-  .post(express.urlencoded({extended: false}), function(request, response, next) {
+  .post(express.urlencoded({extended: false}), function(req,res,next) {
 
     // Check for Order
     console.log('🎉 We got an order!')
