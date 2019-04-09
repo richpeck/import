@@ -119,16 +119,9 @@ router
       "api_key":        tookan,
       "email":          order.email,
       "phone":          order.phone,
-      "transport_type": "1",
-      "transport_desc": "auto",
-      "license":        "demo",
-      "color":          "blue",
-      "timezone":       "-330",
-      "team_id":        "Your Team ID",
       "username":       order.email,
       "first_name":     order.first_name,
-      "last_name":      order.last_name,
-      "rule_id":        "123"
+      "last_name":      order.last_name
     }
 
      console.log(JSON.stringify(tookan_body))
