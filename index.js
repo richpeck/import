@@ -139,17 +139,6 @@ router
       })
     }
 
-    request({
-      method: 'POST',
-      url: url,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tookan_body)
-    }, function (error, response, body) {
-      console.log('Status:', response.statusCode);
-      console.log('Headers:', JSON.stringify(response.headers));
-      console.log('Response:', body);
-    });
-
     // All completed successfully
     res.sendStatus(200)
 
