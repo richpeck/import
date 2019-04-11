@@ -115,14 +115,12 @@ router
 
     // Build dataset
     const order = JSON.parse(rawBody.toString())
-    let url = ''
-    let tookan_body = ''
 
     // Tookan API Data
     // If "agent" tag present in customer signup, create an agent
     if (order.tags.includes('agent')) {
-      let url = 'https://api.tookanapp.com/v2/add_agent'
-      let tookan_body = {
+      var url = 'https://api.tookanapp.com/v2/add_agent'
+      var tookan_body = {
         "api_key":        tookan,
         "username":       order.email,
         "first_name":     order.first_name,
@@ -131,8 +129,8 @@ router
         "timezone":       process.env.TOOKAN_TIMESTAMP || "-330"
       }
     } else {
-      let url = 'https://api.tookanapp.com/v2/customer/add'
-      let tookan_body = {
+      var url = 'https://api.tookanapp.com/v2/customer/add'
+      var tookan_body = {
         "api_key":        tookan,
         "user_type":      0,
         "email":          order.email,
