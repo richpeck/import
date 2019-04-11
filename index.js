@@ -114,10 +114,8 @@ router
     }
 
     // Build dataset
-    const order  = JSON.parse(rawBody.toString())
-    console.log(order);
-    console.log(order.note.replace('Phone:', '').replace('\n', '').trim());
-    var client = new Tookan.Client({api_key: process.env.TOOKAN_KEY})
+    const order = JSON.parse(rawBody.toString())
+    var client  = new Tookan.Client({api_key: process.env.TOOKAN_KEY})
 
     // Tookan API Data
     // If "agent" tag present in customer signup, create an agent
@@ -125,7 +123,7 @@ router
       client.addAgent({
         "username":       order.email,
         "email":          order.email,
-        "phone":          order.phone  || "000",
+        "phone":          order.phone || order.note.replace('Phone:', '').replace('\n', '').trim() || "000",
         "first_name":     order.first_name              || "First",
         "last_name":      order.last_name               || "Last",
         "team_id":        process.env.TOOKAN_TEAM       || "Default Team",
