@@ -116,6 +116,7 @@ router
     // Build dataset
     const order  = JSON.parse(rawBody.toString())
     console.log(order);
+    console.log(order.note.replace('Phone:', '').replace('\n', '').trim());
     var client = new Tookan.Client({api_key: process.env.TOOKAN_KEY})
 
     // Tookan API Data
