@@ -115,26 +115,34 @@ router
 
     // Build dataset
     const order = JSON.parse(rawBody.toString())
-    console.log(order.tags.includes('agent'));
 
     // Tookan API Data
-    let tookan_body = {
-      "api_key":        tookan,
-      "user_type":      0,
-      "email":          order.email,
-      "name":           order.name || "Test",
-      "phone":          order.phone || "000",
-      "address":        order.default_address,
-      //"username":       order.email,
-      //"first_name":     order.first_name,
-      //"last_name":      order.last_name,
-      //"team_id":        process.env.TOOKAN_TEAM || "Default Team",
-      //"timezone":       process.env.TOOKAN_TIMESTAMP || "-330"
+    // If "agent" tag present in customer signup, create an agent
+    if (order.tags.includes('agent')) {
+      let url = 'https://api.tookanapp.com/v2/add_agent'
+      let tookan_body = {
+        "api_key":        tookan,
+        "username":       order.email,
+        "first_name":     order.first_name,
+        "last_name":      order.last_name,
+        "team_id":        process.env.TOOKAN_TEAM || "Default Team",
+        "timezone":       process.env.TOOKAN_TIMESTAMP || "-330"
+      }
+    } else {
+      let url = 'https://api.tookanapp.com/v2/customer/add'
+      let tookan_body = {
+        "api_key":        tookan,
+        "user_type":      0,
+        "email":          order.email,
+        "name":           order.name || "Test",
+        "phone":          order.phone || "000",
+        "address":        order.default_address,
+      }
     }
 
     request({
       method: 'POST',
-      url: 'https://api.tookanapp.com/v2/customer/add',
+      url: url,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(tookan_body)
     }, function (error, response, body) {
