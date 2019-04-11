@@ -128,7 +128,9 @@ router
         "team_id":        process.env.TOOKAN_TEAM       || "Default Team",
         "timezone":       process.env.TOOKAN_TIMESTAMP  || "-330",
         "color":          process.env.TOOKAN_COLOR      || "blue"
-      })
+      }).then(function(value) {
+        console.log(value);
+      });
     } else {
       client.addCustomer({
         "user_type":      0,
@@ -136,7 +138,9 @@ router
         "name":           order.name || "Test",
         "phone":          order.phone || "000",
         "address":        order.default_address,
-      })
+      }).then(function(value) {
+        console.log(value);
+      });
     }
 
     // All completed successfully
