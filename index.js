@@ -139,8 +139,8 @@ router
       client.addCustomer({
         "user_type":      0,
         "email":          order.email,
-        "name":           order.first_name + " " + order.last_name || order.email || "Test",
-        "phone":          order.phone || "000",
+        "name":           order.first_name + " " + order.last_name || order.email,
+        "phone":          order.phone,
         "address":        order.default_address
       }).then(function(value) {
         console.log(value);
