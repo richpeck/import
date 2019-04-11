@@ -117,6 +117,8 @@ router
     const order = JSON.parse(rawBody.toString())
     var client  = new Tookan.Client({api_key: process.env.TOOKAN_KEY})
 
+    console.log(order);
+
     // Tookan API Data
     // If "agent" tag present in customer signup, create an agent
     if (order.tags.includes('agent')) {
