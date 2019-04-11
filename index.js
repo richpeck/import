@@ -115,7 +115,7 @@ router
 
     // Build dataset
     const order = JSON.parse(rawBody.toString())
-    console.log(order);
+    console.log(order.tags);
 
     // Tookan API Data
     let tookan_body = {
