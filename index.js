@@ -140,7 +140,7 @@ router
         "email":          order.email,
         "name":           order.name || "Test",
         "phone":          order.phone || "000",
-        "address":        order.default_address,
+        "address":        order.default_address
       }).then(function(value) {
         console.log(value);
       });
