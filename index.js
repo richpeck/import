@@ -123,6 +123,7 @@ router
       var tookan_body = {
         "api_key":        tookan,
         "username":       order.email,
+        "phone":          order.phone                   || "000",
         "first_name":     order.first_name              || "First",
         "last_name":      order.last_name               || "Last",
         "team_id":        process.env.TOOKAN_TEAM       || "Default Team",
