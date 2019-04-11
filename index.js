@@ -122,6 +122,7 @@ router
     if (order.tags.includes('agent')) {
       client.addAgent({
         "username":       order.email,
+        "email":          order.email,
         "phone":          order.phone                   || "000",
         "first_name":     order.first_name              || "First",
         "last_name":      order.last_name               || "Last",
