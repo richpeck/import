@@ -135,6 +135,7 @@ router
         console.log(value);
       });
     } else {
+      console.log(order.first_name + " " + order.last_name);
       client.addCustomer({
         "user_type":      0,
         "email":          order.email,
