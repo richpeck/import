@@ -140,7 +140,7 @@ router
         "user_type":      0,
         "email":          order.email,
         "name":           order.first_name + " " + order.last_name || order.email,
-        "phone":          order.phone,
+        "phone":          order.phone || order.note.replace('Phone:', '').replace('\n', '').trim(),
         "address":        order.default_address
       }).then(function(value) {
         console.log(value);
