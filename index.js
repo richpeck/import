@@ -116,6 +116,7 @@ router
     // Build dataset
     const order = JSON.parse(rawBody.toString())
     let url = ''
+    let tookan_body = ''
 
     // Tookan API Data
     // If "agent" tag present in customer signup, create an agent
