@@ -30,8 +30,8 @@ const crypto      = require('crypto')
 const secretKey   = process.env.SHOPIFY_KEY
 
 // Tookan API
+const Tookan  = require('tookan-api')
 const request = require('request')
-const tookan  = process.env.TOOKAN_KEY
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -114,14 +114,13 @@ router
     }
 
     // Build dataset
-    const order = JSON.parse(rawBody.toString())
+    const order  = JSON.parse(rawBody.toString())
+    var client = new Tookan.Client({api_key: process.env.TOOKAN_KEY})
 
     // Tookan API Data
     // If "agent" tag present in customer signup, create an agent
     if (order.tags.includes('agent')) {
-      var url = 'https://api.tookanapp.com/v2/add_agent'
-      var tookan_body = {
-        "api_key":        tookan,
+      client.addAgent({
         "username":       order.email,
         "phone":          order.phone                   || "000",
         "first_name":     order.first_name              || "First",
@@ -129,17 +128,15 @@ router
         "team_id":        process.env.TOOKAN_TEAM       || "Default Team",
         "timezone":       process.env.TOOKAN_TIMESTAMP  || "-330",
         "color":          process.env.TOOKAN_COLOR      || "blue"
-      }
+      })
     } else {
-      var url = 'https://api.tookanapp.com/v2/customer/add'
-      var tookan_body = {
-        "api_key":        tookan,
+      client.addCustomer({
         "user_type":      0,
         "email":          order.email,
         "name":           order.name || "Test",
         "phone":          order.phone || "000",
         "address":        order.default_address,
-      }
+      })
     }
 
     request({
