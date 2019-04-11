@@ -123,10 +123,11 @@ router
       var tookan_body = {
         "api_key":        tookan,
         "username":       order.email,
-        "first_name":     order.first_name,
-        "last_name":      order.last_name,
-        "team_id":        process.env.TOOKAN_TEAM || "Default Team",
-        "timezone":       process.env.TOOKAN_TIMESTAMP || "-330"
+        "first_name":     order.first_name              || "First",
+        "last_name":      order.last_name               || "Last",
+        "team_id":        process.env.TOOKAN_TEAM       || "Default Team",
+        "timezone":       process.env.TOOKAN_TIMESTAMP  || "-330"
+        "color":          process.env.TOOKAN_COLOR      || "blue"
       }
     } else {
       var url = 'https://api.tookanapp.com/v2/customer/add'
